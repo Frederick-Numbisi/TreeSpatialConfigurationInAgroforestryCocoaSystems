@@ -2,6 +2,7 @@
 library(vegan)
 library(ggplot2)
 library(grid)
+library(readr)
 
 
 
@@ -9,7 +10,9 @@ library(grid)
 #-----------------------------------------------------------------------------------------
 # NDMS for tree density with sampled CAFS
 
-BaTDen = read.csv(file = "D:/PhD Manuscript/PhD Article Manuscripts/ArticleShapefiles/BakoaShapefiles/BakoaHyperframes/BTDens_nmds.csv", 
+DataPath = ("PathToContainingFolder/")
+
+BaTDen = read_csv(past0(DataPath, "BTDens_nmds.csv", 
                   header = TRUE, check.names = FALSE) #, row.names = 1
 names(BaTDen)
 #View(BaTDen)
@@ -38,11 +41,6 @@ BaTDen_c_zscores = (BaTDen_c  - rowMeans(BaTDen_c ))/(rowSds(as.matrix(BaTDen_c 
 View(BaTDen_c_zscores)
 
 
-
-
-
-
-
 # Rarify data down to the lowest tree density ("lowest-common-denomenator") so that we can compare evenly
 # between samples regardles of sampling depth artefacts.
 
@@ -67,25 +65,6 @@ BaTDen_dis.mds = metaMDS(BaTDen_dis, k=2) # Perform NMDS
 BaTDen_dis.mds$stress
 
 
-
-
-# # Etract scores
-# sites = scores(BaTDen_dis.mds, display = "sites")
-# species = scores(BaTDen_dis.mds, display = "species")
-# 
-# # Compute the axis ranges
-# 
-# xlim = range(sites[,1], species[,1])
-# ylim = range(sites[,2], species[,2])
-# 
-# # set up a blank plotting window
-# plot(BaTDen_dis.mds, type = "n", xlim = xlim, ylim = ylim)
-# 
-# # now adding the points (plots) and species (variables) on the blank plot
-# 
-# points(sites, col="blue", pch=16, cex=1.2)
-# text(species, labels = rownames(species), col = 'red', cex = 0.6)
-
 #------------------------------------------------------
 # Build a dataframe with NMDS coordinates and metadata
 
@@ -93,28 +72,6 @@ MDS1 = BaTDen_dis.mds$points[,1]
 MDS2 = BaTDen_dis.mds$points[,2]
 
 NMDS_Den = data.frame(MDS1 = MDS1, MDS2 = MDS2, Group = BaTDen$Group, Origin = BaTDen$Origin, AgeOri = BaTDen$AgeOri)
-
-# data.scores = as.data.frame(scores(BaTDen_dis.mds)) # extract the site scores and convert to a dataframe
-# data.scores$site = rownames(data.scores) # create a column of site names
-# data.scores$group = BaTDen$Group # add the Age Group Variable
-# head(data.scores) #look at the data
-# # 
-# species.scores = as.data.frame(scores(BaTDen_dis.mds, "species")) # extract the species scores and convert to dataframe
-# species.scores$species = rownames(species.scores) # create a column of species
-# head(species.scores) #look at the data
-
-# data.scores = as.data.frame(scores(BaTDen_dis.mds, display = c("sites", "species")))
-# data.scores
-# 
-# #vec.sp = envfit(BaTDen_dis.mds$points, BaTDen_dis, permutations = 1000)
-# vec.sp = envfit(BaTDen_dis.mds$points, BaTDen_dis)
-# #vec.sp.df = as.data.frame(vec.sp$vector$arrows*sqrt(vec.sp$vectors$r))
-# vec.sp.df = as.data.frame(vec.sp$vector$arrows*1)
-# vec.sp.df
-# #vec.sp.df$species = rownames(vec.spdf)
-# vec.sp$species = rownames(vec.sp)
-# vec.sp
-
 
 
 # plot the NMDS
@@ -163,17 +120,14 @@ summary(anosim_Den)
 plot(anosim_Den)
 #plot(anosim_Den2)
 
-
-# BaTDen_f = subset(BaTDen, Origin=="fCAFS") # subset plots created from forest
-# BaTDen_s = subset(BaTDen, Origin=="sCAFS") # subset plots created from savannah
-# 
+ 
 
 # --------------------------------------------------------------------------
 
 library(vegan)
 library(ggplot2)
 
-BacoaAss = read.csv(file = "D:...../BTDens_nmds.csv", 
+BacoaAss = read_csv(paste0(DataPath, "BTDens_nmds.csv", 
                     header = TRUE, check.names = FALSE, row.names = 1)
 
 # Reorder the levels of the factor variable
@@ -293,51 +247,6 @@ ggplot(data = data.scores, aes(x=NMDS1, y=NMDS2, colour = origin)) +
         plot.background = element_blank(),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank())
-
-
-# 
-# 
-# 
-# plot(BacoaAss_c.mds, type = "n")
-# with(BacoaAss, points(BacoaAss_c.mds, display="sites", cex=1.2, col=colorigin[Origin], # Plot Origin
-#                       pch=21, bg = colorigin[Origin]))
-# text(BacoaAss_c.mds, display = "species", cex=0.8, col= "black")
-# 
-# 
-# plot(BacoaAss_c.mds, type = "n")
-# #points(BaTDen_c.mds, display = "sites", col=colvec[BaTDen$Group])
-# text(BacoaAss_c.mds, display = "sites", cex=0.8, col=colgroup[BacoaAss$Group]) # For Plot Age
-# text(BacoaAss_c.mds, display = "species", cex=0.8, col= "black")
-# 
-# plot(BacoaAss_c.mds, type = "n")
-# #points(BaTDen_c.mds, display = "sites", col=colvec[BaTDen$Group])
-# text(BacoaAss_c.mds, display = "sites", cex=0.8, col=colorigin[BacoaAss$Origin]) # For Plot Origin
-# text(BacoaAss_c.mds, display = "species", cex=0.8, col= "black")
-# 
-# 
-# BacMDS_xy = data.frame(BacoaAss_c.mds$points)
-# BacMDS_xy$Group = BacoaAss$Group
-# BacMDS_xy$Origin = BacoaAss$Origin
-# BacMDS_xy$AgeOri = BacoaAss$AgeOri
-# BacMDS_xy$nAsT = BacoaAss$nAsT
-# 
-# 
-# 
-# ggplot(BacMDS_xy, aes(MDS1, MDS2, color = Group)) + geom_point() + stat_ellipse() + theme_bw()
-# 
-# anosim_group = anosim(BacoaAss_c.mds, BacMDS_xy$Group)
-# anosim_group # take a look at the result
-# summary(anosim_group)
-# plot(anosim_group)
-# 
-
-
-
-
-
-
-
-
 
 
 
