@@ -119,13 +119,13 @@ write.csv(Lij_Plot, file = "Lij_Bivariate_inhom_Plot_Co3_to_AsT.csv", row.names=
 
 #-----------------------------------------------
 #
-# SAVING AND APPENDING THE Ripley-K RESULTS AND FILES IN CSV
+# MERGING AND SAVING THE Ripley-K RESULTS (FILES) IN CSV
 #--------------------------------------------------
 
-#Appending Multivariate Lij(r) Results
+# Created directory of saved results
 file_path_dir <- "/path/to/the/directory/of/Lij(r)Results/"
 
-#Create function to merge results
+#Create function to merge Lij(r) Results
 RipleyKmerge <- function(mydirectory){
   filenames <- list.files(path = mydirectory, full.names = TRUE)
   Lijlist <- lapply(filenames, function(x){
@@ -135,8 +135,10 @@ RipleyKmerge <- function(mydirectory){
     merge(x, y, all = TRUE)}, Lijlist)
 }
 
-# Run function using directory of results
+# Run the merge function using the directory of saved Ripley-K (Lij(r)) results
 Lij_Results <- RipleyKmerge(file_path_dir)
+
+# Save the merged file
 write.csv(Lij_Results, "Lij_Results_Cocoa-AsT.csv", row.names = TRUE)
 
 
