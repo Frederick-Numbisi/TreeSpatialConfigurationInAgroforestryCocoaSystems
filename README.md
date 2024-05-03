@@ -1,5 +1,5 @@
 # Agroforestry Cocoa Tree Spatial Pattern
-Temporal management of Spatial configuration of cocoa and companion trees.
+Temporal Rejuvenation and Spatial configuration of cocoa and companion trees.
 
 This directory contains scripts associated with the following manuscripts on Estimating contribution of farm rejuvenation on tres spatial configuration in cocoa agroforests. Please cite:
 
